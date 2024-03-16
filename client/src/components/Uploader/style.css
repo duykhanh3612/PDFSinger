@@ -1,0 +1,20 @@
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #1475cf;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.upload-button {
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-button span {
+  color: cornflowerblue;
+  margin: auto;
+}
