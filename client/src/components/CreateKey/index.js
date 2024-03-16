@@ -4,14 +4,27 @@ import Sidebar from "../Sidebar";
 import TableKey from "../TableKey";
 import { Button, Modal, Input, Radio } from "antd";
 
+const init = ["", "RSA", "DSA", "ECC", "AES-128", "AES-192", "AES-256"];
+
 const CreateKey = () => {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [value, setValue] = useState(1);
+  const [title, setTitle] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+
   const showModal = () => {
     setIsModalOpen(true);
   };
   const handleOk = () => {
+    const data = {
+      title: title,
+      password: password,
+      confirmPassword: passwordConfirm,
+      encrytionType: init[value],
+    };
+    console.log(data);
     setIsModalOpen(false);
   };
   const handleCancel = () => {
@@ -25,6 +38,7 @@ const CreateKey = () => {
     console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
+
   return (
     <div className="grid-container">
       <Header OpenSidebar={OpenSidebar} />
@@ -40,11 +54,23 @@ const CreateKey = () => {
           onCancel={handleCancel}
         >
           <h3>Tiêu đề của khóa</h3>
-          <Input />
+          <Input
+            value={title}
+            name="title"
+            onChange={(e) => setTitle(e.target.value)}
+          />
           <h3>Mật khẩu của khóa</h3>
-          <Input />
+          <Input
+            value={password}
+            name="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <h3>Xác nhận mật khẩu</h3>
-          <Input />
+          <Input
+            value={passwordConfirm}
+            name="paswordConfirm"
+            onChange={(e) => setPasswordConfirm(e.target.value)}
+          />
           <h3>Chọn loại mã hóa</h3>
 
           <Radio.Group onChange={onChange} value={value}>

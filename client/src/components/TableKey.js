@@ -20,15 +20,7 @@ const columns = [
 ];
 
 const data = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i,
-    title: `Edward King ${i}`,
-    algorithm: 32,
-    created_at: "901283908123",
-    status: `London, Park Lane no. ${i}`,
-  });
-}
+
 const TableKey = () => (
   <Table
     columns={columns}
