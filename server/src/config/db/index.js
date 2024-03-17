@@ -7,7 +7,7 @@ async function connect() {
   };
   try {
     mongoose.connect(
-      "mongodb+srv://thanhyarn:123@cluster0.0skp7cz.mongodb.net/PDFSingerdb"
+      "mongodb+srv://thanhyarn:123@atlascluster.bfqeyvn.mongodb.net/"
     );
     console.log("database connected");
   } catch (error) {

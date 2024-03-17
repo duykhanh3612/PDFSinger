@@ -14,12 +14,12 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
-// Tạo secret key khi server khởi động
-const secretKey = crypto.randomBytes(32).toString("hex");
+// // Tạo secret key khi server khởi động
+// const secretKey = crypto.randomBytes(32).toString("hex");
 
-// Sử dụng secret key trong toàn bộ ứng dụng
-app.set("secretKey", secretKey);
-console.log(secretKey);
+// // Sử dụng secret key trong toàn bộ ứng dụng
+// app.set("secretKey", secretKey);
+// console.log(secretKey);
 
 app.get("/trang-chu", (req, res) => {
   return res.send("Hello World!");
