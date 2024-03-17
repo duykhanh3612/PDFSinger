@@ -37,7 +37,7 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
           </a>
         </li>
         <li className="sidebar-list-item">
-          <a href="">
+          <a href="encode">
             <BsFillGrid3X3GapFill className="icon" /> Mã hóa file
           </a>
         </li>
