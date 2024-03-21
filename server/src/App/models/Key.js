@@ -32,24 +32,30 @@ const keySchema = new mongoose.Schema({
     enum: ["active", "inactive"],
     default: "active",
   },
+  iv: {
+    type: String,
+  },
+  salt: {
+    type: String,
+  },
   created_at: {
     type: Date,
     default: Date.now,
   },
   expires_at: {
     type: Date,
-    required: true,
+    required: false,
   },
 });
 
-// Hash password before saving the key
-keySchema.pre("save", async function (next) {
-  if (this.password) {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-  }
-  next();
-});
+// // Hash password before saving the key
+// keySchema.pre("save", async function (next) {
+//   if (this.password) {
+//     const salt = await bcrypt.genSalt(10);
+//     this.password = await bcrypt.hash(this.password, salt);
+//   }
+//   next();
+// });
 
 const Key = mongoose.model("Key", keySchema);
 
