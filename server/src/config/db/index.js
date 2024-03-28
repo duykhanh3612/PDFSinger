@@ -8,7 +8,6 @@ async function connect() {
   try {
     mongoose.connect(
       "mongodb+srv://khanhdz3612:mai2kquenem@cluster0.0skp7cz.mongodb.net/PDFSingerdb"
-      
     );
     console.log("database connected");
   } catch (error) {

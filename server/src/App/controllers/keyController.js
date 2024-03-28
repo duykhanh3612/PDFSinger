@@ -2,6 +2,8 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const Key = require('../models/key');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const SignedFile = require('../models/SignedFile');
 
 // Hàm kiểm tra dữ liệu đầu vào
 function validateInput(title, encryptionType, password, confirmPassword) {
@@ -102,19 +104,13 @@ async function createKey(req, res) {
         }
 
         // Tạo salt mới
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(10);        // Băm mật khẩu
 
-
-        // Tạo cặp khóa dựa trên loại mã hóa được yêu cầu, tương tự như mã ban đầu
-
-        // Băm mật khẩu
-        const passwordHash = await bcrypt(password);
-
-        // Tạo một IV ngẫu nhiên
+        const passwordHash = await bcrypt.hash(password, 10);
         const iv = crypto.randomBytes(16);
         // console.log(privateKey);
         // Mã hóa khóa private
-        const encryptedPrivateKey = encrypt(privateKey, password, salt, iv); // Tạo hàm mã hóa tương tự như encrypt_private_key trong ví dụ Python
+        const encryptedPrivateKey = encrypt(privateKey, password, salt, iv); 
 
         // Lưu dữ liệu khóa
         const newKey = new Key({
@@ -169,9 +165,7 @@ async function decryptKey(req, res) {
 
 function decrypt(data, password, saltBase64, ivBase64) {
     const salt = Buffer.from(saltBase64, 'base64');
-    const iv = Buffer.from(ivBase64, 'base64');
-    const key = crypto.scryptSync(password, salt, 32);
-
+    const iv = Buffer.from(ivBase64, 'base64');    const key = crypto.scryptSync(password, salt, 32);
     const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
     let decrypted = decipher.update(data, 'base64', 'utf8');
     decrypted += decipher.final('utf8');
@@ -180,9 +174,7 @@ function decrypt(data, password, saltBase64, ivBase64) {
 
 function encrypt(privateKey, password, saltBase64, ivBase64) {
     const salt = Buffer.from(saltBase64, 'base64');
-    const iv = Buffer.from(ivBase64, 'base64');
-    const key = crypto.scryptSync(password, salt, 32);
-
+    const iv = Buffer.from(ivBase64, 'base64');    const key = crypto.scryptSync(password, salt, 32);
     const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
     let encrypted = cipher.update(privateKey, 'utf8', 'base64');
     encrypted += cipher.final('base64');
@@ -221,8 +213,10 @@ async function getAllSignaturesByUserId(req, res) {
     }
 }
 
+
 module.exports = {
     createKey,
     decryptKey,
-    getAllSignaturesByUserId
+    getAllSignaturesByUserId,
+    
 };
