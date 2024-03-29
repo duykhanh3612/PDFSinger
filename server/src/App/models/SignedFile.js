@@ -1,16 +1,11 @@
 const mongoose = require('mongoose');
 
-const SignedFileSchema = new mongoose.Schema({
+const signedFileSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
         required: true
     },
     fileName: {
-        type: String,
-        required: true
-    },
-    filePath: {
         type: String,
         required: true
     },
@@ -22,12 +17,12 @@ const SignedFileSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    filePath: {
+        type: String,
+        required: true
     }
 });
 
-const SignedFile = mongoose.model('SignedFile', SignedFileSchema);
+const SignedFile = mongoose.model('SignedFile', signedFileSchema);
 
 module.exports = SignedFile;
