@@ -128,6 +128,17 @@ async function verifyPdfSignature(pdfContent, publicKey, signature) {
 
 
 async function handlePdfVerification(req, res) {
+    const token = req.headers["authorization"];
+    if (!token) {
+        return res.status(401).json({ error: "Token không được cung cấp" });
+    }
+
+    if (!token.startsWith("Bearer ")) {
+        return res.status(401).json({ error: "Định dạng token không hợp lệ" });
+    }
+
+    const tokenValue = token.slice(7);
+    const secretKey = req.app.get("secretKey");
     const { keyId } = req.body;
     const { file: pdfFile } = req;
     try {
