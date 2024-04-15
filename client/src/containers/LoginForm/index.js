@@ -6,6 +6,7 @@ const LoginForm = () => {
   const [isActive, setIsActive] = useState(false);
 
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -18,6 +19,7 @@ const LoginForm = () => {
   const handleSignUp = () => {
     const dataSignUp = {
       email: email,
+      username: username,
       password: password,
       confirmPassword: confirmPassword,
     };
@@ -64,6 +66,13 @@ const LoginForm = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
+            type="username"
+            placeholder="Username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
             type="password"
             placeholder="Password"
             name="password"
@@ -100,7 +109,7 @@ const LoginForm = () => {
           <span>or use your email password</span>
           <input
             type="email"
-            placeholder="Email"
+            placeholder="Email or username"
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
