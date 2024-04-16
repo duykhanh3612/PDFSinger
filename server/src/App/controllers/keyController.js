@@ -116,7 +116,7 @@ async function createKey(req, res) {
     const salt = await bcrypt.genSalt(10); // Băm mật khẩu
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const iv = crypto.randomBytes(16);
+    const iv = crypto.randomBytes(16);7
     // console.log(privateKey);
     // Mã hóa khóa private
     const encryptedPrivateKey = encrypt(privateKey, password, salt, iv);

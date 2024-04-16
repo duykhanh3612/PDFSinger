@@ -5,13 +5,16 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
+  console.log("Join to register");
   try {
     const { email, username, password, confirmPassword } = req.body;
+
+    console.log(req.body);
 
     // Kiểm tra xem người dùng đã tồn tại chưa
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
 
-    if (existingUser) {  
+    if (existingUser) {
       return res
         .status(400)
         .json({ success: false, message: "User already exists" });
@@ -19,12 +22,10 @@ const register = async (req, res) => {
 
     // Kiểm tra mật khẩu và nhập lại mật khẩu
     if (password !== confirmPassword) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Password and Confirm Password do not match",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Password and Confirm Password do not match",
+      });
     }
 
     // Hash mật khẩu trước khi lưu vào cơ sở dữ liệu
@@ -49,7 +50,11 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { emailOrUsername, password } = req.body;
+    const { email, password } = req.body;
+
+    const emailOrUsername = email;
+
+    console.log(req.body);
     console.log("Request Body:", req.body);
     if (!emailOrUsername) {
       return res
@@ -69,24 +74,20 @@ const login = async (req, res) => {
     });
 
     if (!user) {
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "Invalid email/username or password",
-        });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email/username or password",
+      });
     }
 
     // So sánh mật khẩu
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "Invalid email/username or password",
-        });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email/username or password",
+      });
     }
 
     const secretKey = req.app.get("secretKey");
