@@ -11,8 +11,7 @@ const Dashboard = () => {
     setOpenSidebarToggle(!openSidebarToggle);
   };
   return (
-    <div className="grid-container">
-      <Header OpenSidebar={OpenSidebar} />
+    <div className="">
       <Sidebar
         openSidebarToggle={openSidebarToggle}
         OpenSidebar={OpenSidebar}

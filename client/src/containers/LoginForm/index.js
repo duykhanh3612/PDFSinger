@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { FaFacebook, FaInstagram, FaGithub, FaWhatsapp } from "react-icons/fa";
+import axios from "axios";
 import "./style.css";
+import toast from "react-hot-toast";
 
 const LoginForm = () => {
   const [isActive, setIsActive] = useState(false);
@@ -24,16 +26,61 @@ const LoginForm = () => {
       confirmPassword: confirmPassword,
     };
 
-    console.log("Data Sign Up : ", dataSignUp);
+    console.log("Data Sign Up:", dataSignUp);
+
+    axios
+      .post("http://localhost:3003/user/register", dataSignUp)
+      .then((response) => {
+        // console.log("Success:", response.data);
+        // Handle successful registration (e.g., redirect to user profile)
+        toast.success("Registration successful! Please proceed to login.", {
+          position: "top-right",
+        });
+        // Or: window.location.href = "/user/profile"; // Redirect to profile page
+      })
+      .catch((error) => {
+        console.error("Error:", error.response.data);
+        // Handle 400 Bad Request errors specifically
+        if (error.response && error.response.status === 400) {
+          toast.error(error.response.data.messagec, { position: "top-right" });
+        } else {
+          // Handle other errors (e.g., network errors, 500 Internal Server Error)
+          toast.error("An unexpected error occurred. Please try again later.", {
+            position: "top-right",
+          });
+        }
+      });
   };
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
+    // Using async/await for cleaner error handling
     const dataSignIn = {
       email: email,
       password: password,
     };
 
-    console.log("data Sign In :", dataSignIn);
+    try {
+      const response = await axios.post(
+        "http://localhost:3003/user/login",
+        dataSignIn
+      );
+      console.log("Login Success:", response.data);
+      // Handle successful login (e.g., store user data, redirect to dashboard)
+      toast.success("Logged in successfully!", { position: "top-right" });
+      // Or: localStorage.setItem('user', JSON.stringify(response.data)); // Store user data
+      //     window.location.href = "/user/dashboard"; // Redirect to dashboard
+    } catch (error) {
+      console.error("Error:", error.response.data);
+      // Handle errors appropriately (e.g., display error message)
+      if (error.response && error.response.status === 400) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(
+          "Login failed. Please check your credentials or try again later.",
+          { position: "top-right" }
+        );
+      }
+    }
   };
   return (
     <div

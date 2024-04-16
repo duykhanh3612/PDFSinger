@@ -12,20 +12,17 @@ import {
 
 function Sidebar({ openSidebarToggle, OpenSidebar }) {
   return (
-    <aside
-      id="sidebar"
-      className={openSidebarToggle ? "sidebar-responsive" : ""}
-    >
+    <aside id="sidebar" className={openSidebarToggle ? "" : ""}>
       <div className="sidebar-title">
         <div className="sidebar-brand">
-          <BsCart3 className="icon_header" /> SHOP
+          <h1 style={{ color: "#eee" }}>SGU TOOL</h1>
         </div>
         <span className="icon close_icon" onClick={OpenSidebar}>
           X
         </span>
       </div>
 
-      <ul className="sidebar-list">
+      <ul className="sidebar-list" style={{ display: "flex" }}>
         <li className="sidebar-list-item">
           <a href="/dashboard">
             <BsGrid1X2Fill className="icon" /> Trang Chủ

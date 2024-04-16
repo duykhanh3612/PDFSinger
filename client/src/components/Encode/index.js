@@ -11,8 +11,7 @@ const Encode = () => {
   };
 
   return (
-    <div className="grid-container">
-      <Header OpenSidebar={OpenSidebar} />
+    <div className="">
       <Sidebar
         openSidebarToggle={openSidebarToggle}
         OpenSidebar={OpenSidebar}
