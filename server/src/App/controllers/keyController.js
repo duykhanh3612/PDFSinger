@@ -25,6 +25,8 @@ function validateInput(title, encryptionType, password, confirmPassword) {
 // Hàm tạo mới một khóa
 async function createKey(req, res) {
   const token = req.headers["authorization"];
+
+  console.log(token);
   if (!token) {
     return res.status(401).json({ error: "Token không được cung cấp" });
   }
@@ -40,8 +42,11 @@ async function createKey(req, res) {
     const decodedToken = jwt.verify(tokenValue, secretKey);
     const userId = decodedToken.userId;
 
-    const { title, encryptionType, password, confirmPassword, expires_at } =
-      req.body;
+    const { title, encryptionType, password, confirmPassword } = req.body;
+
+    console.log("encryptionType: ", encryptionType);
+
+    console.log(req.body);
     const inputError = validateInput(
       title,
       encryptionType,
@@ -116,7 +121,8 @@ async function createKey(req, res) {
     const salt = await bcrypt.genSalt(10); // Băm mật khẩu
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const iv = crypto.randomBytes(16);7
+    const iv = crypto.randomBytes(16);
+    7;
     // console.log(privateKey);
     // Mã hóa khóa private
     const encryptedPrivateKey = encrypt(privateKey, password, salt, iv);
@@ -145,7 +151,6 @@ async function decryptKey(req, res) {
   const { keyId, password } = req.body;
 
   // Kiểm tra xác thực token và xử lý lỗi nếu cần thiết
-
   try {
     // Lấy thông tin khóa từ cơ sở dữ liệu dựa trên id_key
     const key = await Key.findById(keyId);
@@ -215,14 +220,65 @@ async function getAllSignaturesByUserId(req, res) {
     // Find all signatures created by the user
     const signatures = await Key.find({ userId: userId });
 
-    // Extract signature names from the signatures
-    const signatureNames = signatures.map((signature) => signature.title);
+    // Map each signature to an object containing more information
+    const signatureObjects = signatures.map((signature) => ({
+      signatureId: signature._id, // Assuming the signature id is stored in _id field
+      signatureNames: signature.title,
+      encryptionType: signature.encryptionType, // Assuming encryptionType is a field in the signature document
+      created_at: signature.created_at, // Assuming created_at is a field in the signature document
+      status: signature.status, // Assuming status is a field in the signature document
+    }));
 
-    // Respond with the list of signature names
-    res.status(200).json({ signatureNames: signatureNames });
+    // Respond with the list of signature objects
+    res.status(200).json({ signatures: signatureObjects });
   } catch (error) {
     console.error("Lỗi khi lấy danh sách chữ ký:", error);
     res.status(500).json({ message: "Không thể lấy danh sách chữ ký" });
+  }
+}
+
+async function changeStatus(req, res) {
+  const token = req.headers["authorization"];
+  if (!token) {
+    return res.status(401).json({ error: "Token không được cung cấp" });
+  }
+
+  if (!token.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Định dạng token không hợp lệ" });
+  }
+  const tokenValue = token.slice(7);
+  const secretKey = req.app.get("secretKey");
+  try {
+    const decodedToken = jwt.verify(tokenValue, secretKey);
+    const userId = decodedToken.userId;
+
+    // Find all signatures created by the user
+    const signatures = await Key.find({ userId: userId });
+
+    // Xác định _id của dữ liệu cần xóa từ req.body
+    const record = req.body.record;
+    if (!record) {
+      // Check if _id exists
+      return res.status(400).json({ error: "Thiếu thông tin record hoặc _id" });
+    }
+    // Kiểm tra xem _id có hợp lệ hay không
+    console.log(signatures);
+    console.log(record);
+    const isValidId = signatures.some(
+      (signature) => signature._id == record.toString()
+    ); // Compare with _id as a string
+    if (!isValidId) {
+      return res
+        .status(400)
+        .json({ error: "Không tìm thấy dữ liệu với _id đã cung cấp" });
+    }
+    // Xóa dữ liệu có _id tương ứng
+    await Key.deleteOne({ _id: record });
+
+    res.status(200).json({ message: "Xóa dữ liệu thành công" });
+  } catch (error) {
+    console.error("Lỗi ", error);
+    res.status(500).json({ message: "Err" });
   }
 }
 
@@ -230,4 +286,5 @@ module.exports = {
   createKey,
   decryptKey,
   getAllSignaturesByUserId,
+  changeStatus,
 };

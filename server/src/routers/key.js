@@ -7,5 +7,6 @@ const Key = require("../App/controllers/keyController");
 router.post("/create", Key.createKey);
 router.post("/dec", Key.decryptKey);
 router.get("/getsig", Key.getAllSignaturesByUserId);
+router.post("/change-status", Key.changeStatus);
 
 module.exports = router;

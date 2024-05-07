@@ -93,10 +93,19 @@ const login = async (req, res) => {
     const secretKey = req.app.get("secretKey");
     // Tạo token
     const token = jwt.sign({ userId: user._id }, secretKey, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
 
-    res.status(200).json({ success: true, message: "Login successful", token });
+    const refreshToken = jwt.sign({ userId: user._id }, secretKey, {
+      expiresIn: "3d",
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token,
+      refreshToken,
+    });
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
