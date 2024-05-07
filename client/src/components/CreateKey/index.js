@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 import TableKey from "../TableKey";
 import { Button, Modal, Input, Radio } from "antd";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const init = ["", "RSA", "DSA", "ECC", "AES-128", "AES-192", "AES-256"];
 
@@ -13,6 +15,14 @@ const CreateKey = () => {
   const [title, setTitle] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [data, setData] = useState([]);
+  const userData = JSON.parse(localStorage.getItem("user")) || [];
+  const token = userData.token || "";
+  // Create headers object with Authorization header
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json", // Assuming you're sending JSON data
+  };
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -22,10 +32,31 @@ const CreateKey = () => {
       title: title,
       password: password,
       confirmPassword: passwordConfirm,
-      encrytionType: init[value],
+      encryptionType: init[value],
     };
-    console.log(data);
-    setIsModalOpen(false);
+    axios
+      .post("http://localhost:3003/key/create", data, { headers: headers })
+      .then((response) => {
+        // console.log("Success:", response.data);
+        // Handle successful registration (e.g., redirect to user profile)
+        toast.success("Registration successful! Please proceed to login.", {
+          position: "top-right",
+        });
+        fetchData()
+        // Or: window.location.href = "/user/profile"; // Redirect to profile page
+      })
+      .catch((error) => {
+        console.error("Error:", error.response.data);
+        // Handle 400 Bad Request errors specifically
+        if (error.response && error.response.status === 400) {
+          toast.error(error.response.data.messagec, { position: "top-right" });
+        } else {
+          // Handle other errors (e.g., network errors, 500 Internal Server Error)
+          toast.error("An unexpected error occurred. Please try again later.", {
+            position: "top-right",
+          });
+        }
+      });
   };
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -38,6 +69,22 @@ const CreateKey = () => {
     console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
+
+  const fetchData = () => {
+    axios
+      .get("http://localhost:3003/key/getsig", { headers: headers })
+      .then((response) => {
+        console.log(response.data);
+        setData(response.data.signatures);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="">
@@ -96,7 +143,7 @@ const CreateKey = () => {
         <Button onClick={showModal} type="primary">
           Tạo khóa mới
         </Button>
-        <TableKey />
+        <TableKey data={data} fetchData={fetchData} />
       </div>
     </div>
   );

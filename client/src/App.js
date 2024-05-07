@@ -6,7 +6,7 @@ import Home from "./containers/Home";
 import Encode from "./components/Encode";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CreateKey from "./components/CreateKey";
-import Toaster from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 // import Header from "./components/Header";
 
 function App() {

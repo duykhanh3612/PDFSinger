@@ -67,8 +67,8 @@ const LoginForm = () => {
       console.log("Login Success:", response.data);
       // Handle successful login (e.g., store user data, redirect to dashboard)
       toast.success("Logged in successfully!", { position: "top-right" });
-      // Or: localStorage.setItem('user', JSON.stringify(response.data)); // Store user data
-      //     window.location.href = "/user/dashboard"; // Redirect to dashboard
+      localStorage.setItem("user", JSON.stringify(response.data)); // Store user data
+      window.location.href = "/dashboard"; // Redirect to dashboard
     } catch (error) {
       console.error("Error:", error.response.data);
       // Handle errors appropriately (e.g., display error message)
