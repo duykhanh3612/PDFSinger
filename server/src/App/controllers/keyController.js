@@ -5,6 +5,20 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const SignedFile = require("../models/SignedFile");
 
+function isValidToken(token) {
+  try {
+    const secretKey = req.app.get("secretKey");
+    // Giải mã token
+    const decoded = jwt.verify(token, secretKey);
+
+    // Nếu giải mã thành công, token là hợp lệ
+    return true;
+  } catch (error) {
+    // Nếu có lỗi trong quá trình giải mã (ví dụ: token hết hạn hoặc không hợp lệ), token là không hợp lệ
+    return false;
+  }
+}
+
 // Hàm kiểm tra dữ liệu đầu vào
 function validateInput(title, encryptionType, password, confirmPassword) {
   if (!title || typeof title !== "string") {
@@ -237,7 +251,7 @@ async function getAllSignaturesByUserId(req, res) {
   }
 }
 
-async function changeStatus(req, res) {
+async function deleteKey(req, res) {
   const token = req.headers["authorization"];
   if (!token) {
     return res.status(401).json({ error: "Token không được cung cấp" });
@@ -282,9 +296,102 @@ async function changeStatus(req, res) {
   }
 }
 
+async function changeStatus(req, res) {
+  const token = req.headers["authorization"];
+  if (!token) {
+    return res.status(401).json({ error: "Token không được cung cấp" });
+  }
+
+  if (!token.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Định dạng token không hợp lệ" });
+  }
+  const tokenValue = token.slice(7);
+  const secretKey = req.app.get("secretKey");
+  try {
+    const decodedToken = jwt.verify(tokenValue, secretKey);
+    const userId = decodedToken.userId;
+
+    // Kiểm tra xem có record cần thay đổi không
+    const recordId = req.body.record;
+    if (!recordId) {
+      return res.status(400).json({ error: "Thiếu thông tin record hoặc _id" });
+    }
+
+    // Tìm record cần thay đổi trạng thái
+    const existingRecord = await Key.findById(recordId);
+
+    if (!existingRecord) {
+      return res
+        .status(404)
+        .json({ error: "Không tìm thấy dữ liệu với _id đã cung cấp" });
+    }
+
+    // Thay đổi trạng thái của record
+    existingRecord.status =
+      existingRecord.status === "active" ? "inactive" : "active";
+    await existingRecord.save();
+
+    res.status(200).json({
+      message: "Thay đổi trạng thái thành công",
+      record: existingRecord,
+    });
+  } catch (error) {
+    console.error("Lỗi ", error);
+    res
+      .status(500)
+      .json({ message: "Lỗi trong quá trình thay đổi trạng thái" });
+  }
+}
+
+async function editTitle(req, res) {
+  const token = req.headers["authorization"];
+  if (!token) {
+    return res.status(401).json({ error: "Token không được cung cấp" });
+  }
+
+  if (!token.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Định dạng token không hợp lệ" });
+  }
+  const tokenValue = token.slice(7);
+  const secretKey = req.app.get("secretKey");
+  try {
+    const decodedToken = jwt.verify(tokenValue, secretKey);
+    const userId = decodedToken.userId;
+
+    // Kiểm tra xem có record cần thay đổi không
+    const { record, newTitle } = req.body;
+    if (!record) {
+      return res.status(400).json({ error: "Thiếu thông tin record hoặc _id" });
+    }
+
+    // Tìm record cần chỉnh sửa tiêu đề
+    const existingRecord = await Key.findById(record);
+
+    if (!existingRecord) {
+      return res
+        .status(404)
+        .json({ error: "Không tìm thấy dữ liệu với _id đã cung cấp" });
+    }
+
+    // Thay đổi tiêu đề của record
+    existingRecord.title = newTitle;
+    await existingRecord.save();
+
+    res.status(200).json({
+      message: "Thay đổi tiêu đề thành công",
+      record: existingRecord,
+    });
+  } catch (error) {
+    console.error("Lỗi ", error);
+    res.status(500).json({ message: "Lỗi trong quá trình thay đổi tiêu đề" });
+  }
+}
+
 module.exports = {
   createKey,
   decryptKey,
   getAllSignaturesByUserId,
+  deleteKey,
   changeStatus,
+  editTitle,
 };
