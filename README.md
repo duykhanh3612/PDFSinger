@@ -1,70 +1,60 @@
-# Getting Started with Create React App
+PDFSigner
+Welcome to PDFSigner, an application designed for digitally signing PDF documents with ease and security. This application allows you to create, customize, apply, and verify digital signatures, ensuring your documents are authenticated and compliant with digital signature standards.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Key Features
+Digital Signature Creation: Generate and customize your digital signatures for personal or business use.
+PDF Signing: Easily apply your signatures to PDF documents with a simple click.
+Verification: Validate and authenticate the digital signatures applied to your documents.
+User-Friendly Interface: Enjoy a straightforward and intuitive interface for seamless document signing.
+Compliance: Adheres to industry standards and encryption protocols for digital signatures, ensuring your documents meet compliance requirements.
+Technologies Used
+Node.js: A JavaScript runtime built on Chrome's V8 engine, used for building the backend of the application.
+MongoDB: A NoSQL database used for storing user data and document information securely.
+React.js: A JavaScript library for building user interfaces, used for the client-side of the application.
+Installation
+Clone the repository:
 
-## Available Scripts
+bash
+Copy code
+git clone https://github.com/duykhanh3612/PDFSinger.git
+Navigate to the project directory:
 
-In the project directory, you can run:
+bash
+Copy code
+cd PDFSigner
+Install the backend dependencies:
 
-### `npm start`
+bash
+Copy code
+npm install
+Set up your MongoDB database and configure the connection string in the .env file.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Navigate to the client directory:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+bash
+Copy code
+cd client
+Install the client dependencies:
 
-### `npm test`
+bash
+Copy code
+npm install
+Usage
+Start the backend server from the project root directory:
+bash
+Copy code
+npm start
+Start the client server from the client directory:
+bash
+Copy code
+cd client
+npm start
+Open your browser and navigate to http://localhost:3000.
+Contribution
+Contributions are welcome! If you have any suggestions or improvements, feel free to open an issue or submit a pull request.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+License
+This project is licensed under the MIT License. See the LICENSE file for more details.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Contact
+For any inquiries or support, please contact .[Khanh]. at .[leduykhanhqn123@gmail.com].
